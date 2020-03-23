@@ -1,0 +1,128 @@
+*{
+    font-family: 'Oxanium', cursive;
+}
+body{
+    margin: 0;
+    padding: 0;
+    height:100vh;
+    background-color: black;
+    /* font-family: 'Oxanium', cursive; */
+}
+.wrap_calc{
+    height:100%;
+    border:1px solid white;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.skin_of_calc{
+    max-width:1600px;
+    /* display:flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+/* @media (min-width:1201px){
+    .wrap_calc{
+        height:100%;
+    }
+} */
+@media (max-width:600px){
+    .wrap_calc{
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    .skin_of_calc{
+        display:flex;
+        flex-direction: column;
+    }
+    .down_part_calc{
+        flex-direction: column;
+    }
+}
+.down_part_calc{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.top_part_calc{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.way_of_history{
+    max-width:50rem;
+    display:flex;
+    justify-content: center;
+    transform: translateY(-100px);
+    align-items: center;
+    position: absolute;
+    /* width:100%; */
+    font-size: 2rem;
+    color:#fff;
+}
+.way_of_history:hover{
+    cursor:pointer;
+}
+.way_of_history:hover .helper_way_of_history{
+    top:100%;
+    left:100%;
+    position:absolute;
+    cursor:pointer;
+    display:inline-block;
+    font-size:1rem;
+    background-color: rgb(44, 40, 40);
+}
+.helper_way_of_history{
+    display:none;
+}
+.inp_calc{
+    /* font-family: 'Oxanium', cursive; */
+    width:80%;
+    /* max-width:60rem; */
+    height:3rem;
+    border-radius:2rem;
+    border: none;
+    outline: none;
+    text-align: end;
+    vertical-align: middle;
+    padding-right: 5rem;
+    margin-bottom: 5rem;
+    margin-top:5rem;
+    font-size:2rem;
+
+}
+/* .one_part_btns{
+    display:flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: 81%;
+} */
+.btn{
+    height:4rem;
+    font-size:3rem;
+    background-color: #fff;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s all;
+}
+@media(min-width:601px){
+    .btn{
+        min-width:16rem;
+    }
+}
+@media (max-width:600px){
+    .btn{
+        min-width:6rem;
+    }
+}
+.btn:hover{
+    font-size:4rem;
+    cursor:pointer;
+    background-color: lightcyan;
+}
+/* .btn:nth-last-child(1){
+    width:80%;
+} */
