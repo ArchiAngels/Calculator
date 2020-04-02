@@ -7,8 +7,9 @@ window.addEventListener('load',function(){
 
     let key_spec_num = false;
 
-    let arr_with_spec_symbl = ['+','=','-','*','/','AC','&lt;--','.'];
+    let arr_with_spec_symbl = ['+','=','-','*','/','AC','&lt;--','.','^'];
     // let arr_with_num_spec_symbl = ['107','109','106','111','110'];
+    let Very_High_prority = ['^'];
     let High_priority = ['*','/'];
     let low_priority = ['+','-'];
     let acces_cjhanger = false;
@@ -32,10 +33,11 @@ way_history.addEventListener('click',function(){
 btns.addEventListener('click',function(event){
         acces_cjhanger = false;
         if(event.target.className == 'btn'){
+            console.log('Spec num');
             if(checking_num(event.target.innerHTML,arr_with_spec_symbl) == false){
                 if(first_enter) inpute.innerHTML = '';
                 first_enter = false;
-                inpute.innerHTML += `${event.target.innerHTML}`;
+                inpute.innerHTML += ` ${event.target.innerHTML}`;
                 history = mini_l;
                 key_spec_num = true;
             }
@@ -83,6 +85,7 @@ function specific_symbol(n){
             // console.log(inpute.innerHTML);
             toNumber(inpute.innerHTML);
             IsFinished = true;
+            num_of_operation = 0;
             break;
         }
         case 'AC':{
@@ -130,24 +133,72 @@ function toNumber_2(n){
     console.log(n);
         arr_num = [];
         arr_symb = [];
-        let counterSpec_symb = 1;
         let numbers_tmp = 0;
+        let all_propertys_of_priorytet = {
+            Very_high:false,
+            hight:false
+        }
         n = n.slice(0,n.length-1);
+        for(let j = 0; j < n.length;j++){
+            // console.log('1:',all_propertys_of_priorytet,n[j]);
+            if(checking_num(n[j],Very_High_prority) == true){
+                all_propertys_of_priorytet.Very_high = true;
+                
+            }
+            // console.log('1:',all_propertys_of_priorytet,n[j]);
+            if(j == n.length - 1){
+                for(let jj = 0; jj<n.length;jj++){
+                    // console.log('2:',all_propertys_of_priorytet,n[jj]);
+                    if(checking_num(n[jj],High_priority) == true){
+                        all_propertys_of_priorytet.hight = true;
+                        
+                    }
+                    // console.log('2:',all_propertys_of_priorytet,n[jj]);
+                }
+            }
+            
+        }
         for( let i = 0; i < n.length; i++){
             // console.log(n[i],checking_num(n[i],arr_with_spec_symbl));
                 if(checking_num(n[i],arr_with_spec_symbl) == false || n[i] == '.'){
                     numbers_tmp += n[i];
                 }
-                if(checking_num(n[i],arr_with_spec_symbl) == true && n[i] != '.'){
-                        counterSpec_symb++;    
-                        arr_num.push(Number(numbers_tmp));
-                    if(checking_num(n[i],High_priority) == true){
-                        // console.log('NENADO',n[i]);
+                if(checking_num(n[i],arr_with_spec_symbl) == true && n[i] != '.'){  
+                    arr_num.push(Number(numbers_tmp));
+                    if(checking_num(n[i],Very_High_prority) == true){
+                        console.log('Very HIGH:__',n[i]);
                         arr_symb.push(n[i]);
+                        
                     }
                     else{
-                        // console.log('NADO',n[i]);
-                        arr_symb.push('_'+n[i]);
+                        if(checking_num(n[i],High_priority) == true){
+                            if(all_propertys_of_priorytet.Very_high == true){
+                                console.log('HIGH with VERY HIGH:',n[i]);
+                                arr_symb.push('_'+n[i]);
+                            }
+                            else{
+                                console.log('NORMAL with HIGH:',n[i]);
+                                arr_symb.push(n[i]);
+                            }
+                        }
+                        else{
+                            
+                            if(all_propertys_of_priorytet.Very_high == true && all_propertys_of_priorytet.hight == true){
+                                console.log('NORMAL with 2 HIGHTs:',n[i]);
+                                arr_symb.push('__'+n[i]);
+                            }
+                            if((all_propertys_of_priorytet.Very_high == false && all_propertys_of_priorytet.hight == true)
+                                ||(all_propertys_of_priorytet.Very_high == true && all_propertys_of_priorytet.hight == false)){
+                                console.log('NORMAL with Very || just High:',n[i]);
+                                arr_symb.push('_'+n[i]);
+                            }
+                            if(all_propertys_of_priorytet.Very_high == false && all_propertys_of_priorytet.hight == false){
+                                console.log('NORMAL:',n[i]);
+                                arr_symb.push(n[i]);
+                            }
+
+                            
+                        }
                     }
                     numbers_tmp = 0;
                 }
@@ -155,6 +206,8 @@ function toNumber_2(n){
                     arr_num.push(Number(numbers_tmp));
                 }
         }
+        console.log(arr_num,arr_symb);
+        // console.log(arr_num,arr_symb,all_propertys_of_priorytet,all_propertys_of_priorytet.Very_high,all_propertys_of_priorytet.Very_high == true);
         toNumber_3(arr_num,arr_symb);
     }
 let new_arr_numbers = [];
@@ -210,22 +263,21 @@ function transalte_znak(znak_str,x1,x2){
             case '-':{return x1-x2;}
             case '*':{return x1*x2;}
             case '/':{return x1/x2;}
+            case '^':{return Math.pow(x1,x2)}
 
         }
     }
 function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new){
-    // let tmp2 = 0;
-    // for(let j = 0; j<arr_nums.length;j++){
-    //     if('Useless' == arr_nums[j]){
-    //         arr_nums = delete_from_array_by_name(arr_nums,'Useless');
-    //     }
-    //     else{
-    //     }
-    // }
-    let first_time = true;
+    if(znak[0] == '_'){
+        console.log('REPEAT:',znak);
+        toNumber_3(arr_nums,arr_symbl_new);
+    }
+    else{
+        let first_time = true;
     console.log('BEFORE:',i,arr_nums,arr_num_new,arr_symbl_new,znak);
-    
-    arr_nums[i] = transalte_znak(znak,arr_nums[i],arr_nums[i+1]);
+    add_global_history(arr_nums[i],znak,arr_nums[i+1],'=',transalte_znak(znak,arr_nums[i],arr_nums[i+1]));
+        arr_nums[i] = transalte_znak(znak,arr_nums[i],arr_nums[i+1]);
+        
         arr_num_new.push(arr_nums[i]);
         arr_nums[i+1] = 'Useless';
         for(let k = 0; k < arr_symbl_new.length;k++){
@@ -247,9 +299,11 @@ function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new){
         }
         else{
             console.log('FINISH');
-            go_to_result(inpute.innerHTML,`${(arr_nums[arr_nums.length - 1]).toFixed(5)}...  `);
+            go_to_result(inpute.innerHTML,`${(arr_nums[arr_nums.length - 1]).toFixed(2)}   `);
             IsFinished = false;
+            new_arr_numbers = [];
         }
+    }
     }
 // let jopa = [1,2,2,1,2,5,1,5,7,5,6,8,1,2,1,2,1];
 // console.log('BEFORE:',jopa,jopa.lenght);
@@ -288,15 +342,14 @@ function delete_from_array_by_name(arr,index_for_delete,first_elem_delete_of_arr
                 
             }
             return tmp1;
-            // console.log(tmp1);
     }
+let table_history = document.querySelector('.table_history_wrap');
+let num_of_operation = 0;
+function add_global_history(x1,znak,x2,equal,solution){
+    let new_elem_div = document.createElement('DIV');
+    new_elem_div.innerHTML = `${num_of_operation} : ${x1} ${znak} ${x2} ${equal} ${(solution).toFixed(3)}`;
+    new_elem_div.classList.add('test_item');
+    table_history.appendChild(new_elem_div);
+    num_of_operation++;
+}
 })
-
-// console.log('9+4',Number('+'),parseFloat('+'));
-
-// let jopin_arr = [0,'loh',4,2,5,6,8,7,'loh',3,5,'loh',7,8,'loh',6,8,9,1,5];
-// console.log(jopin_arr,'BEFORE');
-
-
-// jopin_arr = delete_from_array_by_name(jopin_arr,'loh');
-// console.log(jopin_arr,'AFTER');

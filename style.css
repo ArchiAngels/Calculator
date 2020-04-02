@@ -8,9 +8,25 @@ body{
     background-color: black;
     /* font-family: 'Oxanium', cursive; */
 }
+.table_history_wrap{
+    position:absolute;
+}
+.test_item{
+    /* width:10vw; */
+    padding-left: 2vw;
+    padding-right: 2vw;
+    /* background-color: blue; */
+    transform:translateY(1vh);
+    color:#fff;
+    display:flex;
+    /* justify-content: center; */
+    align-items: center;
+    text-align: left;
+
+}
 .wrap_calc{
     height:100%;
-    border:1px solid white;
+    /* border:1px solid white; */
     display:flex;
     justify-content: center;
     align-items: center;
