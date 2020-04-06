@@ -6,22 +6,72 @@ window.addEventListener('load',function(){
     const way_history = document.querySelector('.way_of_history');
 
     let key_spec_num = false;
+    let first_write_num = false; // IF false we can't write spec num + * / -
 
     let arr_with_spec_symbl = ['+','=','-','*','/','AC','&lt;--','.','^'];
-    // let arr_with_num_spec_symbl = ['107','109','106','111','110'];
+    let arr_keyboard_nums = ['1','2','3','4','5','6','7','8','9','0'];
+
     let Very_High_prority = ['^'];
     let High_priority = ['*','/'];
     let low_priority = ['+','-'];
-    let acces_cjhanger = false;
+
+    let arr_with_all_ariphmetic = [];
+    let acces_cjhanger = false; // Change VALUES way history WITH inpute inner html
+
+    Sliyanie_arrov(arr_with_all_ariphmetic,arr_with_spec_symbl,arr_keyboard_nums);
+    // console.log(arr_with_all_ariphmetic);
 
     let arr_num = [];
     let arr_symb = [];
 
     let mini_l = inpute.innerHTML;
-    let first_enter = false; // For clear inpute.innerHTML
+    let first_enter = true; // For clear inpute.innerHTML
 
+window.addEventListener('keydown',function(event){
+    // console.log(inpute.innerHTML,event.key,event);
+        // console.log(event.key)
+        switch(event.key){
+            case 'Delete':{
+                inpute.innerHTML = 'Write Something';
+                first_enter = true; // DEL placeholder
+                first_write_num = false; // Need write first time number
+                break;
+            }
+            case 'Enter':{
+                inpute.innerHTML += '= ';
+                specific_symbol('=');
+                break;
+            }
+            case 'Backspace':{
+                specific_symbol('&lt;--');
+                break;
+            }
+            default:{
+                if( checking_num(event.key,arr_with_all_ariphmetic)){
+                    if(checking_num(event.key,arr_with_spec_symbl)){
+                        if(key_spec_num && first_write_num){
+                            console.log('IF');
+                            inpute.innerHTML += `${event.key} `;
+                            key_spec_num = false; // if false we can't write + - / * ...
+                        }
+                        if(!key_spec_num && first_write_num){
+                            console.log("ELSE");
+                            inpute.innerHTML = `${inpute.innerHTML.slice(0,inpute.innerHTML.length - 2)}${event.key} `;
+                        }
+                    }
+                    else{
+                        if(first_enter) inpute.innerHTML = '';
+                            first_enter = false;
+                        first_write_num = true;
+                        key_spec_num = true; // if true we can write * / + - ....
+                        inpute.innerHTML += `${event.key} `;
+                    }
+                }
+            }
+        }
+})
 way_history.addEventListener('click',function(){
-        if(acces_cjhanger == true){
+        if(acces_cjhanger == true){ // if true Return value FROM history way TO inpute inner html
             if(way_history != '' && key_spec_num == false){
                 way_history.innerHTML = way_history.innerHTML.slice(0,way_history.innerHTML.length - 2);
                 inpute.innerHTML = way_history.innerHTML.slice(0,way_history.innerHTML.length-1);
@@ -37,6 +87,7 @@ btns.addEventListener('click',function(event){
             if(checking_num(event.target.innerHTML,arr_with_spec_symbl) == false){
                 if(first_enter) inpute.innerHTML = '';
                 first_enter = false;
+                first_write_num = true;
                 inpute.innerHTML += ` ${event.target.innerHTML}`;
                 history = mini_l;
                 key_spec_num = true;
@@ -48,7 +99,7 @@ btns.addEventListener('click',function(event){
         
     })
 function start_bb(e){
-            if(key_spec_num == false && inpute.innerHTML != ''){
+            if(key_spec_num == false && inpute.innerHTML != '' && first_write_num){
                 console.log('TOPSSS');
                 let templet = inpute.innerHTML.slice(0,inpute.innerHTML.length - e.target.innerHTML.length - 1);
                     if(e.target.innerHTML != '&lt;--'){
@@ -56,13 +107,13 @@ function start_bb(e){
                     }
                 specific_symbol(e.target.innerHTML);
             }
-            if(key_spec_num == true){
+            if(key_spec_num && first_write_num){ // if true we can write spec symbl + * / - ....
                 console.log('GO BACK TRUE');
                     if(e.target.innerHTML != '&lt;--'){
                         inpute.innerHTML += ` ${e.target.innerHTML} `;
                     }
                 
-                key_spec_num = false;
+                key_spec_num = false; // if false we can't write spec symbl + * / - ....
                 specific_symbol(e.target.innerHTML);
             }
             if(inpute.innerHTML == ''){
@@ -94,6 +145,7 @@ function specific_symbol(n){
             inpute.innerHTML = '';
             key_spec_num = false;
             acces_cjhanger = true;
+            first_write_num = false;
             break;
         }
         case '&lt;--':{
@@ -159,12 +211,16 @@ function toNumber_2(n){
             
         }
         for( let i = 0; i < n.length; i++){
-            // console.log(n[i],checking_num(n[i],arr_with_spec_symbl));
+            console.log(n[i],checking_num(n[i],arr_with_spec_symbl));
                 if(checking_num(n[i],arr_with_spec_symbl) == false || n[i] == '.'){
                     numbers_tmp += n[i];
                 }
                 if(checking_num(n[i],arr_with_spec_symbl) == true && n[i] != '.'){  
-                    arr_num.push(Number(numbers_tmp));
+                    console.log(n[i]);
+                    if( numbers_tmp != 0){
+                        arr_num.push(Number(numbers_tmp));
+                    }
+        
                     if(checking_num(n[i],Very_High_prority) == true){
                         console.log('Very HIGH:__',n[i]);
                         arr_symb.push(n[i]);
@@ -177,7 +233,7 @@ function toNumber_2(n){
                                 arr_symb.push('_'+n[i]);
                             }
                             else{
-                                console.log('NORMAL with HIGH:',n[i]);
+                                console.log('HIGH with HIGH:',n[i]);
                                 arr_symb.push(n[i]);
                             }
                         }
@@ -185,16 +241,30 @@ function toNumber_2(n){
                             
                             if(all_propertys_of_priorytet.Very_high == true && all_propertys_of_priorytet.hight == true){
                                 console.log('NORMAL with 2 HIGHTs:',n[i]);
-                                arr_symb.push('__'+n[i]);
+                                // if(i == 0){
+                                //     console.error(' FIRST',arr_num,arr_symb);
+                                // }
+                                // else{
+                                //     console.error('Not FIRST');
+                                    arr_symb.push('__'+n[i]);
+                                // }
                             }
                             if((all_propertys_of_priorytet.Very_high == false && all_propertys_of_priorytet.hight == true)
                                 ||(all_propertys_of_priorytet.Very_high == true && all_propertys_of_priorytet.hight == false)){
                                 console.log('NORMAL with Very || just High:',n[i]);
-                                arr_symb.push('_'+n[i]);
+                                // if(i == 0){console.error(' FIRST',arr_num,arr_symb);}
+                                // else{
+                                //     console.error('Not FIRST');
+                                    arr_symb.push('_'+n[i]);
+                                // }
                             }
                             if(all_propertys_of_priorytet.Very_high == false && all_propertys_of_priorytet.hight == false){
                                 console.log('NORMAL:',n[i]);
-                                arr_symb.push(n[i]);
+                                // if(i == 0){console.error(' FIRST',arr_num,arr_symb);}
+                                // else{
+                                //     console.error('Not FIRST');
+                                    arr_symb.push(n[i]);
+                                // }
                             }
 
                             
@@ -273,13 +343,15 @@ function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new){
         toNumber_3(arr_nums,arr_symbl_new);
     }
     else{
-        let first_time = true;
-    console.log('BEFORE:',i,arr_nums,arr_num_new,arr_symbl_new,znak);
-    add_global_history(arr_nums[i],znak,arr_nums[i+1],'=',transalte_znak(znak,arr_nums[i],arr_nums[i+1]));
-        arr_nums[i] = transalte_znak(znak,arr_nums[i],arr_nums[i+1]);
-        
+        arr_nums = delete_from_array_by_name(arr_nums,'Useless');
+            let first_time = true;
+            console.log('BEFORE:',i,arr_nums,arr_num_new,arr_symbl_new,znak,arr_nums[i],arr_nums[i+1] || arr_nums[i-1]);
+            add_global_history(arr_nums[i],znak,arr_nums[i+1],'=',transalte_znak(znak,arr_nums[i],arr_nums[i+1]));
+
+            arr_nums[i] = transalte_znak(znak,arr_nums[i],arr_nums[i+1]);
+            arr_nums[i+1] = 'Useless';
+
         arr_num_new.push(arr_nums[i]);
-        arr_nums[i+1] = 'Useless';
         for(let k = 0; k < arr_symbl_new.length;k++){
             if(arr_symbl_new[k] == znak && first_time == true){
                 console.log(arr_symbl_new,znak);
@@ -303,12 +375,9 @@ function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new){
             IsFinished = false;
             new_arr_numbers = [];
         }
+        }
+        
     }
-    }
-// let jopa = [1,2,2,1,2,5,1,5,7,5,6,8,1,2,1,2,1];
-// console.log('BEFORE:',jopa,jopa.lenght);
-// jopa = delete_from_array_by_name(jopa,1,true);
-// console.log('AFTER',jopa,jopa.length);
 function delete_from_array_by_name(arr,index_for_delete,first_elem_delete_of_arr = false){
         let tmp1 = [];
         let count_0f_deleted_index = 0;
@@ -343,13 +412,24 @@ function delete_from_array_by_name(arr,index_for_delete,first_elem_delete_of_arr
             }
             return tmp1;
     }
-let table_history = document.querySelector('.table_history_wrap');
+const table_history = document.querySelector('.table_history_wrap');
 let num_of_operation = 0;
 function add_global_history(x1,znak,x2,equal,solution){
     let new_elem_div = document.createElement('DIV');
-    new_elem_div.innerHTML = `${num_of_operation} : ${x1} ${znak} ${x2} ${equal} ${(solution).toFixed(3)}`;
+    new_elem_div.innerHTML = `${num_of_operation} : ${x1} ${znak} ${x2} ${equal} ${(solution)}`;
     new_elem_div.classList.add('test_item');
+    if(num_of_operation > 0){
+        new_elem_div.style.paddingLeft += `${2 + num_of_operation}vw`;
+    }
     table_history.appendChild(new_elem_div);
     num_of_operation++;
+}
+function Sliyanie_arrov(in_arr,arr1,arr2){
+    for(let b = 0; b< arr1.length;b++){
+        in_arr.push(arr1[b]);
+    }
+    for(let h = 0; h< arr2.length;h++){
+        in_arr.push(arr2[h]);
+    }
 }
 })
