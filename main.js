@@ -1,7 +1,9 @@
 
+
+const inpute = document.querySelector('.inp_calc');
 window.addEventListener('load',function(){
 
-    const inpute = document.querySelector('.inp_calc');
+    
     const btns = document.querySelector('.down_part_calc');
     const way_history = document.querySelector('.way_of_history');
 
@@ -35,6 +37,13 @@ window.addEventListener('keydown',function(event){
                 inpute.innerHTML = 'Write Something';
                 first_enter = true; // DEL placeholder
                 first_write_num = false; // Need write first time number
+                break;
+            }
+            case ':':{
+                if(key_spec_num){
+                    inpute.innerHTML += '^ ';
+                    key_spec_num = false;
+                }
                 break;
             }
             case 'Enter':{
@@ -161,8 +170,8 @@ function specific_symbol(n){
     }
 }
 function go_to_result(n,b){
-        way_history.innerHTML = n;
-        inpute.innerHTML = b;
+        n == undefined ?  way_history.innerHTML = 0 :  way_history.innerHTML = n;
+        b == 0 ? inpute.innerHTML = '' : inpute.innerHTML = b;
     }
 function toNumber(inpBefore){
     console.log(inpBefore);
@@ -188,7 +197,8 @@ function toNumber_2(n){
         let numbers_tmp = 0;
         let all_propertys_of_priorytet = {
             Very_high:false,
-            hight:false
+            hight:false,
+            minus_first:false
         }
         n = n.slice(0,n.length-1);
         for(let j = 0; j < n.length;j++){
@@ -211,60 +221,65 @@ function toNumber_2(n){
             
         }
         for( let i = 0; i < n.length; i++){
-            console.log(n[i],checking_num(n[i],arr_with_spec_symbl));
+            // console.log(n[i],checking_num(n[i],arr_with_spec_symbl));
                 if(checking_num(n[i],arr_with_spec_symbl) == false || n[i] == '.'){
                     numbers_tmp += n[i];
                 }
                 if(checking_num(n[i],arr_with_spec_symbl) == true && n[i] != '.'){  
-                    console.log(n[i]);
+                    // console.log(n[i]);
                     if( numbers_tmp != 0){
                         arr_num.push(Number(numbers_tmp));
                     }
         
                     if(checking_num(n[i],Very_High_prority) == true){
-                        console.log('Very HIGH:__',n[i]);
+                        // console.log('Very HIGH:__',n[i]);
                         arr_symb.push(n[i]);
                         
                     }
                     else{
                         if(checking_num(n[i],High_priority) == true){
                             if(all_propertys_of_priorytet.Very_high == true){
-                                console.log('HIGH with VERY HIGH:',n[i]);
+                                // console.log('HIGH with VERY HIGH:',n[i]);
                                 arr_symb.push('_'+n[i]);
                             }
                             else{
-                                console.log('HIGH with HIGH:',n[i]);
+                                // console.log('HIGH with HIGH:',n[i]);
                                 arr_symb.push(n[i]);
                             }
                         }
                         else{
                             
                             if(all_propertys_of_priorytet.Very_high == true && all_propertys_of_priorytet.hight == true){
-                                console.log('NORMAL with 2 HIGHTs:',n[i]);
-                                // if(i == 0){
-                                //     console.error(' FIRST',arr_num,arr_symb);
-                                // }
-                                // else{
-                                //     console.error('Not FIRST');
+                                // console.log('NORMAL with 2 HIGHTs:',n[i]);
+                                if(i == 0){
+                                    // console.error(' FIRST',arr_num,arr_symb);
+                                    all_propertys_of_priorytet.minus_first = true;
+                                }
+                                else{
+                                    // console.error('Not FIRST');
                                     arr_symb.push('__'+n[i]);
-                                // }
+                                }
                             }
                             if((all_propertys_of_priorytet.Very_high == false && all_propertys_of_priorytet.hight == true)
                                 ||(all_propertys_of_priorytet.Very_high == true && all_propertys_of_priorytet.hight == false)){
-                                console.log('NORMAL with Very || just High:',n[i]);
-                                // if(i == 0){console.error(' FIRST',arr_num,arr_symb);}
-                                // else{
-                                //     console.error('Not FIRST');
+                                // console.log('NORMAL with Very || just High:',n[i]);
+                                if(i == 0){
+                                    // console.error(' FIRST',arr_num,arr_symb);
+                                all_propertys_of_priorytet.minus_first = true;}
+                                else{
+                                    // console.error('Not FIRST');
                                     arr_symb.push('_'+n[i]);
-                                // }
+                                }
                             }
                             if(all_propertys_of_priorytet.Very_high == false && all_propertys_of_priorytet.hight == false){
-                                console.log('NORMAL:',n[i]);
-                                // if(i == 0){console.error(' FIRST',arr_num,arr_symb);}
-                                // else{
-                                //     console.error('Not FIRST');
+                                // console.log('NORMAL:',n[i]);
+                                if(i == 0){
+                                    // console.error(' FIRST',arr_num,arr_symb);
+                                all_propertys_of_priorytet.minus_first = true;}
+                                else{
+                                    // console.error('Not FIRST');
                                     arr_symb.push(n[i]);
-                                // }
+                                }
                             }
 
                             
@@ -276,18 +291,23 @@ function toNumber_2(n){
                     arr_num.push(Number(numbers_tmp));
                 }
         }
-        console.log(arr_num,arr_symb);
+        // console.error(arr_num,arr_symb);
+        if(arr_symb.length == 0){
+            go_to_result(arr_num[0],0);
+        }
+        else{toNumber_3(arr_num,arr_symb,all_propertys_of_priorytet.minus_first);}
+        
         // console.log(arr_num,arr_symb,all_propertys_of_priorytet,all_propertys_of_priorytet.Very_high,all_propertys_of_priorytet.Very_high == true);
-        toNumber_3(arr_num,arr_symb);
+        
     }
 let new_arr_numbers = [];
 let IsFinished = true;
-function toNumber_3(n,b){
-    console.log('PRINYAL:',n,b);
+function toNumber_3(n,b,minus_on_first = false){
+    console.log('PRINYAL:',n,b,'MINUS FIRST: ',minus_on_first);
     let debt_symbls = [];
         
                     for(let s = 0; s<b.length; s++){
-                        // console.log(b[s]);
+                        // console.log(b[s],s);
                         if(b[s].length > 1 ){
                             // console.log('_1',b[s]);
                             debt_symbls.push(b[s].slice(1,b[s].length));
@@ -295,12 +315,17 @@ function toNumber_3(n,b){
                             // console.log('_2',b[s]);
                         }
                         else{
-                            // console.log('norm',b[s]);
+                            // console.error('norm',b[s]);
                             // helper_to_num3(s,n[s],new_arr_numbers,b[s]);
                             
                             if(IsFinished == true){
                                 console.log('OTADL 1:',s,n,new_arr_numbers,b[s]);
-                                helper_to_num3(s,n,new_arr_numbers,b[s],b);
+                                helper_to_num3(s,
+                                    n,
+                                    new_arr_numbers,
+                                    b[s],
+                                    b,
+                                    minus_on_first);
                                 break;
                             }
                             
@@ -313,43 +338,66 @@ function toNumber_3(n,b){
                             
                             if(IsFinished == true){
                                 console.log('OTDAL 2:',i,n,new_arr_numbers,debt_symbls[i]);
-                                helper_to_num3(i,n,new_arr_numbers,debt_symbls[i],debt_symbls);
+                                helper_to_num3(i,
+                                    n,
+                                    new_arr_numbers,
+                                    debt_symbls[i],
+                                    debt_symbls,
+                                    minus_on_first);
                                 break;
                             }
                             
                         }
-                    
-                    
             // console.log(b)
             // console.log('KoNIEC:',n,b);
             
     }
-function transalte_znak(znak_str,x1,x2){
-    console.log('Current Operation:     ',znak_str,x1,x2);
+function transalte_znak(znak_str,x1,x2,minus_first){
+    console.log('Current Operation:     ',znak_str,x1,x2,minus_first);
+    let tmp = 0;
         switch(znak_str){
             case '+':{
-                return x1+x2;
+                minus_first == true ? tmp = -1 * x1+x2 : tmp =  x1+x2;
+                break;
             }
-            case '-':{return x1-x2;}
-            case '*':{return x1*x2;}
-            case '/':{return x1/x2;}
-            case '^':{return Math.pow(x1,x2)}
+            case '-':{
+                if(minus_first){
+                    tmp = (x1+x2)* -1;
+                }
+                if(!minus_first){
+                    tmp = x1-x2;
+                }
+                break;
+            }
+            case '*':{minus_first == true ? tmp = -1* ( x1*x2 ) : tmp = x1*x2;break;}
+            case '/':{minus_first == true ? tmp = -1* ( x1/x2 ) : tmp = x1/x2;break;}
+            case '^':{
+                if(minus_first && x2%2 != 0){
+                    tmp = (Math.pow(x1,x2))* -1;
+                }
+                else{
+                    tmp = Math.pow(x1,x2);
+                }
+                break;
+            }
 
         }
+        return tmp;
     }
-function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new){
+function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new,minus_first = false){
     if(znak[0] == '_'){
         console.log('REPEAT:',znak);
-        toNumber_3(arr_nums,arr_symbl_new);
+        toNumber_3(arr_nums,arr_symbl_new,minus_first);
     }
     else{
+        let tmp_bool = false;
         arr_nums = delete_from_array_by_name(arr_nums,'Useless');
             let first_time = true;
-            console.log('BEFORE:',i,arr_nums,arr_num_new,arr_symbl_new,znak,arr_nums[i],arr_nums[i+1] || arr_nums[i-1]);
-            add_global_history(arr_nums[i],znak,arr_nums[i+1],'=',transalte_znak(znak,arr_nums[i],arr_nums[i+1]));
-
-            arr_nums[i] = transalte_znak(znak,arr_nums[i],arr_nums[i+1]);
-            arr_nums[i+1] = 'Useless';
+            console.log('BEFORE:',i,arr_nums,arr_num_new,arr_symbl_new,znak,arr_nums[i],i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1]);
+            add_global_history(minus_first == true ? -1 *arr_nums[i]: arr_nums[i],znak,i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1],'=',transalte_znak(znak,arr_nums[i],i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1],i == 0 ? minus_first == true ? tmp_bool =  true : tmp_bool = false : tmp_bool = false));
+            arr_nums[i] = transalte_znak(znak,arr_nums[i],i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1], i == 0 ? minus_first == true ? tmp_bool = true : tmp_bool = false : tmp_bool = false);
+            // arr_nums[i+1] = 'Useless';
+            i+1 >= arr_nums.length ? arr_nums[i-1] = 'Useless' : arr_nums[i+1] = 'Useless';
 
         arr_num_new.push(arr_nums[i]);
         for(let k = 0; k < arr_symbl_new.length;k++){
@@ -367,7 +415,7 @@ function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new){
     console.log('AFTER:',i,arr_nums,arr_num_new,arr_symbl_new,znak);
         if(arr_symbl_new.length > 0){
         console.log('GO',);
-        toNumber_3(arr_nums,arr_symbl_new);
+        toNumber_3(arr_nums,arr_symbl_new,minus_first);
         }
         else{
             console.log('FINISH');

@@ -67,7 +67,7 @@ body{
     flex-wrap: wrap;
 }
 .way_of_history{
-    max-width:50rem;
+    /* max-width:50rem; */
     display:flex;
     justify-content: center;
     transform: translateY(-100px);
