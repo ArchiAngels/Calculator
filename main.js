@@ -1,11 +1,14 @@
 
 
-const inpute = document.querySelector('.inp_calc');
+
 window.addEventListener('load',function(){
 
     
     const btns = document.querySelector('.down_part_calc');
     const way_history = document.querySelector('.way_of_history');
+    const table_history = document.querySelector('.table_history_wrap');
+    const inpute = document.querySelector('.inp_calc');
+    const arrows = document.querySelector('.wrap_for_arrows');
 
     let key_spec_num = false;
     let first_write_num = false; // IF false we can't write spec num + * / -
@@ -28,11 +31,56 @@ window.addEventListener('load',function(){
 
     let mini_l = inpute.innerHTML;
     let first_enter = true; // For clear inpute.innerHTML
+    let clicks_on_arrows = 0;
 
+arrows.addEventListener('click',function(event){
+    // console.log(arrows.children,clicks_on_arrows);
+    if(clicks_on_arrows == 3){
+        // console.log('GO TO DELETE');
+        for(let o = 0; 0< arrows.children.length;o++){
+            // console.log(arrows.children[o].className);
+            if(arrows.children[o].className == 'description'){
+                arrows.children[o].innerHTML = 'Bye . . .   = )';
+                setTimeout(goPaka,800);
+                function goPaka(){
+                    arrows.removeChild(arrows.children[o]);
+                }
+                break;
+            }
+        }
+    }
+    if(event.target.className == 'Arrow'){
+        // console.log(event.target,event.target.innerHTML);
+        if(event.target.innerHTML == 'Show'){
+            // console.log('SHOW');
+            open_clouse_bastion(table_history,0);
+        }
+        if(event.target.innerHTML == 'Clouse'){
+            // console.log('CLOSE');
+            open_clouse_bastion(table_history,table_history.offsetWidth);
+        }
+        clicks_on_arrows++;
+    }
+})
 window.addEventListener('keydown',function(event){
     // console.log(inpute.innerHTML,event.key,event);
         // console.log(event.key)
         switch(event.key){
+            case 'ArrowLeft':{
+                console.log('CLOSE');
+                // table_history.style.marginLeft = -table_history.offsetWidth+'px';
+                // table_history.style.marginLeft = '-1200px';
+                open_clouse_bastion(table_history,table_history.offsetWidth);
+                // console.log(table_history,table_history.style.marginleft);
+                break;
+            }
+            case 'ArrowRight':{
+                console.log('OPEN');
+                // table_history.style.marginLeft = 0+'px';
+                open_clouse_bastion(table_history,0);
+                // console.log(table_history.offsetWidth,table_history.style.marginleft);
+                break;
+            }
             case 'Delete':{
                 inpute.innerHTML = 'Write Something';
                 first_enter = true; // DEL placeholder
@@ -422,6 +470,7 @@ function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new,minus_first = 
             go_to_result(inpute.innerHTML,`${(arr_nums[arr_nums.length - 1]).toFixed(2)}   `);
             IsFinished = false;
             new_arr_numbers = [];
+            table_history.style.marginLeft = -table_history.offsetWidth+'px';
         }
         }
         
@@ -460,14 +509,13 @@ function delete_from_array_by_name(arr,index_for_delete,first_elem_delete_of_arr
             }
             return tmp1;
     }
-const table_history = document.querySelector('.table_history_wrap');
 let num_of_operation = 0;
 function add_global_history(x1,znak,x2,equal,solution){
     let new_elem_div = document.createElement('DIV');
     new_elem_div.innerHTML = `${num_of_operation} : ${x1} ${znak} ${x2} ${equal} ${(solution)}`;
     new_elem_div.classList.add('test_item');
     if(num_of_operation > 0){
-        new_elem_div.style.paddingLeft += `${2 + num_of_operation}vw`;
+        new_elem_div.style.paddingLeft += `${2+2}vw`;
     }
     table_history.appendChild(new_elem_div);
     num_of_operation++;
@@ -479,5 +527,8 @@ function Sliyanie_arrov(in_arr,arr1,arr2){
     for(let h = 0; h< arr2.length;h++){
         in_arr.push(arr2[h]);
     }
+}
+function open_clouse_bastion(n,number_of_margin_left){
+    n.style.marginLeft = `-${number_of_margin_left}px`;
 }
 })

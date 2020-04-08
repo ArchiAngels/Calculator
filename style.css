@@ -6,10 +6,18 @@ body{
     padding: 0;
     height:100vh;
     background-color: black;
+    overflow-x: hidden;
     /* font-family: 'Oxanium', cursive; */
 }
 .table_history_wrap{
     position:absolute;
+    height:100vh;
+    transition: all 0.3s;
+    border-right:5px solid white;
+    background-color: rgba(0,0,0,0.75);
+    margin-left:0px;
+    z-index:3;
+
 }
 .test_item{
     /* width:10vw; */
@@ -22,7 +30,8 @@ body{
     /* justify-content: center; */
     align-items: center;
     text-align: left;
-
+    width:100vw;
+    /* position:absolute; */
 }
 .wrap_calc{
     height:100%;
@@ -76,6 +85,7 @@ body{
     /* width:100%; */
     font-size: 2rem;
     color:#fff;
+    z-index:2;
 }
 .way_of_history:hover{
     cursor:pointer;
@@ -139,3 +149,41 @@ body{
 /* .btn:nth-last-child(1){
     width:80%;
 } */
+.wrap_for_arrows{
+    margin-top:-5vh;
+    position:absolute;
+    z-index:4;
+    
+    color:#fff;
+    /* flex-wrap: wrap; */
+}
+.description{
+    /* transition:all 0.85s; */
+    width:100vw;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.wrap_wrap_arrow{
+    width:100vw;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.Arrow{
+    /* transition:all 0.3s; */
+    /* position:absolute; */
+    transition: all 0.3s;
+    width:45vw;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.Arrow:hover{
+    cursor:pointer;
+    border-bottom:1px solid #fff;
+    transition: all 0.3s;
+}
+.Arrow:active{
+    transform: translateY(5px);
+}
