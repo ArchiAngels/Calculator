@@ -32,7 +32,21 @@ window.addEventListener('load',function(){
     let mini_l = inpute.innerHTML;
     let first_enter = true; // For clear inpute.innerHTML
     let clicks_on_arrows = 0;
-
+table_history.addEventListener('click',function(event){
+    console.log(event.target);
+    if(event.target.className == 'Answer'){
+        if(inpute.innerHTML == 'Write Something'){
+            inpute.innerHTML = event.target.innerHTML;
+            key_spec_num = true;
+            first_write_num = true;
+        }
+        else{
+            inpute.innerHTML += event.target.innerHTML;
+            key_spec_num = true;
+            first_write_num = true;
+        }
+    }
+})
 arrows.addEventListener('click',function(event){
     // console.log(arrows.children,clicks_on_arrows);
     if(clicks_on_arrows == 3){
@@ -451,7 +465,7 @@ function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new,minus_first = 
         arr_nums = delete_from_array_by_name(arr_nums,'Useless');
             let first_time = true;
             console.log('BEFORE:',i,arr_nums,arr_num_new,arr_symbl_new,znak,arr_nums[i],i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1]);
-            add_global_history(minus_first == true ? -1 *arr_nums[i]: arr_nums[i],znak,i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1],'=',transalte_znak(znak,arr_nums[i],i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1],i == 0 ? minus_first == true ? tmp_bool =  true : tmp_bool = false : tmp_bool = false));
+            add_global_history(minus_first == true ? -1 *arr_nums[i]: arr_nums[i],znak,i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1],'=','<span class="Answer">'+transalte_znak(znak,arr_nums[i],i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1],i == 0 ? minus_first == true ? tmp_bool =  true : tmp_bool = false : tmp_bool = false)+'</span>');
             arr_nums[i] = transalte_znak(znak,arr_nums[i],i+1 >= arr_nums.length ? arr_nums[i-1] : arr_nums[i+1], i == 0 ? minus_first == true ? tmp_bool = true : tmp_bool = false : tmp_bool = false);
             // arr_nums[i+1] = 'Useless';
             i+1 >= arr_nums.length ? arr_nums[i-1] = 'Useless' : arr_nums[i+1] = 'Useless';

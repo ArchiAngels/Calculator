@@ -187,3 +187,10 @@ body{
 .Arrow:active{
     transform: translateY(5px);
 }
+.Answer{
+    padding-left: 0.5vw;
+}
+.Answer:hover{
+    color:red;
+    cursor:pointer;
+}
