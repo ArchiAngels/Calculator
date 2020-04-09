@@ -62,6 +62,9 @@ arrows.addEventListener('click',function(event){
         clicks_on_arrows++;
     }
 })
+function test_btns(index,n){
+    arrows.children[arrows.children.length - 1].children[index].style.transform = `TranslateY(${n}px)`;
+}
 window.addEventListener('keydown',function(event){
     // console.log(inpute.innerHTML,event.key,event);
         // console.log(event.key)
@@ -70,6 +73,9 @@ window.addEventListener('keydown',function(event){
                 console.log('CLOSE');
                 // table_history.style.marginLeft = -table_history.offsetWidth+'px';
                 // table_history.style.marginLeft = '-1200px';
+                arrows.children[arrows.children.length - 1].children[1].style.transform = `TranslateY(${5}px)`;
+                let temp_let = function (){test_btns(1,0);};
+                setTimeout(temp_let,200);
                 open_clouse_bastion(table_history,table_history.offsetWidth);
                 // console.log(table_history,table_history.style.marginleft);
                 break;
@@ -77,6 +83,9 @@ window.addEventListener('keydown',function(event){
             case 'ArrowRight':{
                 console.log('OPEN');
                 // table_history.style.marginLeft = 0+'px';
+                arrows.children[arrows.children.length - 1].children[0].style.transform = `TranslateY(${5}px)`;
+                let temp_let = function (){test_btns(0,0);};
+                setTimeout(temp_let,200);
                 open_clouse_bastion(table_history,0);
                 // console.log(table_history.offsetWidth,table_history.style.marginleft);
                 break;
@@ -470,7 +479,7 @@ function helper_to_num3(i,arr_nums,arr_num_new,znak,arr_symbl_new,minus_first = 
             go_to_result(inpute.innerHTML,`${(arr_nums[arr_nums.length - 1]).toFixed(2)}   `);
             IsFinished = false;
             new_arr_numbers = [];
-            table_history.style.marginLeft = -table_history.offsetWidth+'px';
+            // table_history.style.marginLeft = -table_history.offsetWidth+'px';
         }
         }
         
